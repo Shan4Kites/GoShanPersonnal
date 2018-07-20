@@ -4,7 +4,7 @@ import (
     "fmt"
     "log"
     "net/http"
-    "github.com/Shan4Kites/stringutil/src/stringutility"
+    "github.com/Shan4Kites/stringutil/stringutility"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
