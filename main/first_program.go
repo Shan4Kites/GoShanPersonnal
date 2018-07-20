@@ -4,6 +4,7 @@ import (
     "fmt"
     "log"
     "net/http"
+    "github.com/Shan4Kites/stringutil/src/stringutility"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
@@ -11,6 +12,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+    fmt.Printf(stringutility.Reverse("!oG ,olleH"))
     http.HandleFunc("/", handler)
     log.Fatal(http.ListenAndServe(":8080", nil))
 }
