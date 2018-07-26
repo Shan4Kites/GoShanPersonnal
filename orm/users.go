@@ -2,7 +2,6 @@ package orm
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 type Users struct {
@@ -23,7 +22,7 @@ func (self Users) Create()  {
 }
 
 /*
-This updates the record
+This updates the record. The record needs to be fetched for updating.
  */
 func (self Users) Update()  {
 	sqlStatement := `UPDATE users SET username = $2 WHERE id = $1`
@@ -34,7 +33,7 @@ func (self Users) Update()  {
 }
 
 /*
-This deletes the record
+This deletes the record. The record needs to be fetched for deleting.
  */
 func (self Users) Delete()  {
 	sqlStatement := `DELETE FROM users WHERE id = $1`
@@ -49,12 +48,8 @@ This gets all the records matches the condition
 this expects query in this format : "id = $1" followed by list of values
  */
 func (self Users) Where(query string, args ...interface{})  (usersList []Users) {
-	sqlStatement := "select * from users where " + query
-	fmt.Println(args)
-	fmt.Println(sqlStatement)
-	res, err := self.DB.Exec(sqlStatement, args...)
-	fmt.Println("result is ", res)
-	rows, err := self.DB.Query("select username,id from users where id = 4")
+	sqlStatement := "select username, id from users where " + query
+	rows, err := self.DB.Query(sqlStatement, args...)
 	if err != nil {
 		panic(err)
 	}
