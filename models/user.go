@@ -8,6 +8,10 @@ type User struct {
 func (self User) GetMapping() (mapper map[string]interface{}) {
 	mapper = make(map[string]interface{})
 	mapper["id"] = self.Id
-	mapper["name"] = self.Name
+	mapper["username"] = self.Name
 	return mapper
+}
+
+func (self User) GetTableName() string {
+	return "users"
 }
