@@ -17,11 +17,16 @@ func main() {
 	//res := user.Where("id=$1", 4)
 	//fmt.Println("users : " , res)
 
-	user := models.User{Id: 1, Name: "shanmugam"}
-	fmt.Println("F user", user)
+	//user := models.User{Id: 1, Name: "shanmugam", Place: "chennai"}
+	//fmt.Println("F user", user)
+	//activeRecord := orm.ActiveRecord{DB: initializer.DB, ObjectMapper: &user}
+	//activeRecord.Create()
+	//user.Name = "shan-updated"
+	//activeRecord.Update()
+
+	user := models.User{}
 	activeRecord := orm.ActiveRecord{DB: initializer.DB, ObjectMapper: &user}
-	activeRecord.Create()
-	user.Name = "shan-updated"
-	activeRecord.Update()
-	fmt.Println("S user", user)
+	//Reading the existing record
+	res := activeRecord.Where("username=$1", "shan")
+	fmt.Println("S user", res)
 }

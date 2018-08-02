@@ -1,15 +1,7 @@
 package main
 
-import (
-	"net/http"
-	"fmt"
-	"log"
-)
+import "github.com/Shan4Kites/GoShanPersonnal/initializer"
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-}
 func main() {
-	http.HandleFunc("/", handler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+    initializer.Initialize()
 }
