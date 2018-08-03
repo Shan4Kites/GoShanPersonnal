@@ -13,11 +13,14 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func justChecking() {
-	log.Println("Url is called now")
+	log.Info("Url is called now")
 }
 
 func initializeLogging() (file *os.File) {
-	file, err := os.OpenFile("production.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	if _, err := os.Stat("log"); os.IsNotExist(err) {
+		os.Mkdir("log", 0755)
+	}
+	file, err := os.OpenFile("log/production.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("Error opening file: %v", err)
 	}
