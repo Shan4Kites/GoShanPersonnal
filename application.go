@@ -5,15 +5,39 @@ import (
 	"fmt"
 	log "github.com/sirupsen/logrus"
 	"os"
+	"github.com/gorilla/mux"
+	"golang.org/x/net/context"
+	"github.com/rs/xid"
 )
 
-func handler(w http.ResponseWriter, r *http.Request) {
+func Handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
-	justChecking()
+	justChecking(r.Context())
 }
 
-func justChecking() {
-	log.Info("Url is called now")
+func justChecking(ctx context.Context) {
+	log := log.WithFields(log.Fields{"requestId": ctx.Value("requestId")})
+	log.Info( "Url is called now")
+}
+
+func RequestMetaDataInitializer(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
+		requestId := xid.New()
+		ctx := context.WithValue(req.Context(), "requestId", requestId)
+		req = req.WithContext(ctx)
+		log := log.WithFields(log.Fields{"requestId": ctx.Value("requestId")})
+		log.Info("Before")
+		h.ServeHTTP(w, req) // call original
+		log.Println("After")
+	})
+}
+
+func TestWrapper(h http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		log.Info("Inside TestWrapper Before")
+		h.ServeHTTP(w, r) // call original
+		log.Println("Inside TestWrapper After")
+	})
 }
 
 func initializeLogging() (file *os.File) {
@@ -31,7 +55,10 @@ func initializeLogging() (file *os.File) {
 func main() {
 	file := initializeLogging()
 	defer file.Close()
-	log.Println("This is a test log entry")
-	http.HandleFunc("/", handler)
+	log.Println("Service just started")
+	r := mux.NewRouter()
+	r.HandleFunc("/", Handler)
+
+	http.Handle("/", RequestMetaDataInitializer(r))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
