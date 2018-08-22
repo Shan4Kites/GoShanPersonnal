@@ -8,6 +8,8 @@ import (
 	"github.com/gorilla/mux"
 	"golang.org/x/net/context"
 	"github.com/rs/xid"
+	"github.com/Shan4Kites/GoShanPersonnal/test"
+	"github.com/onrik/logrus/filename"
 )
 
 func Handler(w http.ResponseWriter, r *http.Request) {
@@ -18,6 +20,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func justChecking(ctx context.Context) {
 	log := log.WithFields(log.Fields{"requestId": ctx.Value("requestId")})
 	log.Info( "Url is called now")
+	test.TestChange(ctx)
 }
 
 func RequestMetaDataInitializer(h http.Handler) http.Handler {
@@ -49,6 +52,7 @@ func initializeLogging() (file *os.File) {
 		log.Fatalf("Error opening file: %v", err)
 	}
 	log.SetOutput(file)
+	log.AddHook(filename.NewHook())
 	return
 }
 
