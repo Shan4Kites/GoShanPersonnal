@@ -60,5 +60,5 @@ func main() {
 	r.HandleFunc("/", Handler)
 
 	http.Handle("/", RequestMetaDataInitializer(r))
-	log.Fatal(http.ListenAndServe(":5000", nil))
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
