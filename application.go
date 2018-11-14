@@ -41,10 +41,10 @@ func TestWrapper(h http.Handler) http.Handler {
 }
 
 func initializeLogging() (file *os.File) {
-	if _, err := os.Stat("log"); os.IsNotExist(err) {
-		os.Mkdir("log", 0755)
-	}
-	file, err := os.OpenFile("log/production.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
+	//if _, err := os.Stat("log"); os.IsNotExist(err) {
+	//	os.Mkdir("log", 0755)
+	//}
+	file, err := os.OpenFile("/var/log/production.log", os.O_RDWR | os.O_CREATE | os.O_APPEND, 0666)
 	if err != nil {
 		log.Fatalf("Error opening file: %v", err)
 	}
@@ -55,7 +55,7 @@ func initializeLogging() (file *os.File) {
 func main() {
 	file := initializeLogging()
 	defer file.Close()
-	log.Println("Service just started")
+	log.Println("Newshan2 Service just started")
 	r := mux.NewRouter()
 	r.HandleFunc("/", Handler)
 
