@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"time"
+	_ "net/http/pprof"
 )
 
 type WelcomeHandler struct {
@@ -52,9 +53,20 @@ func initializeLogging() (file *os.File) {
 	return
 }
 
+func test(i int) {
+	fmt.Println("i is :", i)
+	time.Sleep(time.Minute)
+	fmt.Println("completed")
+}
+
 func main() {
 	file := initializeLogging()
 	defer file.Close()
+
+	var i int
+	for i=0; i<10; i++ {
+		go test(i)
+	}
 	http.Handle("/", AddRequestIdMiddleware(LogTimeMiddleware(WelcomeHandler{})))
 	http.Handle("/learn", AddRequestIdMiddleware(LogTimeMiddleware(LearningHandler{})))
 	log.Fatal(http.ListenAndServe(":8080", nil))
